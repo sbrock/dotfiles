@@ -73,6 +73,8 @@ function cd {
 ##### aliases
 
 alias ls='gls --color=always'
+alias vi='vim'
+alias top='htop'
 
 ##### python stuff
 export WORKON_HOME=$HOME/.virtualenvs
