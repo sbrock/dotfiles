@@ -1,0 +1,73 @@
+export PGUSER=cpk
+export PATH=/usr/local/sbin:/usr/local/bin:/bin:/usr/sbin:/sbin:/home/cpk/bin:/usr/bin:/home/cpk/scripts:/usr/home/cpk/.local/bin:$PATH
+export JOHN=$HOME/.john
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+
+eval $( gdircolors -b /home/cpk/.LS_COLORS )
+
+#Prompt and prompt colors
+# 30m - Black
+# 31m - Red
+# 32m - Green
+# 33m - Yellow
+# 34m - Blue
+# 35m - Purple
+# 36m - Cyan
+# 37m - White
+# 0 - Normal
+# 1 - Bold
+function prompt {
+  local BLACK="\[\033[0;30m\]"
+  local BLACKBOLD="\[\033[1;30m\]"
+  local RED="\[\033[0;31m\]"
+  local REDBOLD="\[\033[1;31m\]"
+  local GREEN="\[\033[0;32m\]"
+  local GREENBOLD="\[\033[1;32m\]"
+  local YELLOW="\[\033[0;33m\]"
+  local YELLOWBOLD="\[\033[1;33m\]"
+  local BLUE="\[\033[0;34m\]"
+  local BLUEBOLD="\[\033[1;34m\]"
+  local PURPLE="\[\033[0;35m\]"
+  local PURPLEBOLD="\[\033[1;35m\]"
+  local CYAN="\[\033[0;36m\]"
+  local CYANBOLD="\[\033[1;36m\]"
+  local WHITE="\[\033[0;37m\]"
+  local WHITEBOLD="\[\033[1;37m\]"
+  local DEEPBLUE="\[\033[38;05;27m\]"
+  local WARMBLUE="\[\033[38;05;69m\]"
+  local BLOOD="\[\033[38;05;196m\]"
+export PS1="\n$WHITEBOLD[\t]$BLOOD \u@\h\[\033[00m\]:$WARMBLUE\w\[\033[00m\] \\$ "
+}
+prompt
+alias ls='gls --color=always'
+alias vm='VBoxManage'
+alias vi='vim'
+alias top='htop'
+
+function doom() {
+	chocolate-doom -windown -geometry 1024x768 -iwad ~/games/doom/DOOM.WAD & disown
+}
+
+function doom2() {
+	chocolate-doom -windown -geometry 1024x768 -iwad ~/games/doom/DOOM2.WAD & disown
+}
+
+## python stuff ##
+export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python
+export VIRTUALENVWRAPPER_VIRTUALENV=/usr/local/bin/virtualenv
+source /usr/local/bin/virtualenvwrapper.sh
+
+#### ruby stuff ####
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+
+#### go stuff ####
+export GOPATH=$HOME/devel/go
+export PATH=$PATH:$GOPATH/bin
+
+#### perl stuff ####
+source ~/.perl5/perlbrew/etc/bashrc
+
+#### perl6/rakudo stuff
+export RAKUDOPATH=$HOME/devel/rakudobrew
+export PATH=$PATH:$RAKUDOPATH/bin
