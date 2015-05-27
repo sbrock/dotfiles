@@ -38,6 +38,8 @@ if $( svn info > /dev/null 2>&1 ); [[ $? == 0 ]]; then
         export PS1=$CYANBOLD\(\(\(~~subversion~~\)\)\)$NICEPROMPT
 elif $( git rev-parse > /dev/null 2>&1 ); [[ $? == 0 ]]; then
         export PS1=$GREENBOLD\(\(\(~~git~~\)\)\)$NICEPROMPT
+elif $( hg identify > /dev/null 2>&1 ); [[ $? == 0 ]]; then
+        export PS1=$YELLOWBOLD\(\(\(~~mercurial~~\)\)\)$NICEPROMPT
 else
         export PS1=$NICEPROMPT
 fi
