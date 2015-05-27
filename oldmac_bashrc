@@ -1,0 +1,83 @@
+export GOPATH=$HOME/devel/go
+export CVS_RSH=/usr/bin/ssh
+export PATH=/usr/local/sbin:/usr/local/bin:/bin:/usr/sbin:/sbin:/Users/cpk/bin:/usr/bin:/Users/cpk/scripts:/Users/cpk/devel/php/pear/bin:/usr/local/mysql/bin:/Users/cpk/games/mame/mame0152-64bit:$HOME/Library/Python/2.7/bin:$GOPATH/bin:$PATH
+export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/opt/X11/lib/pkgconfig
+export XML_CATALOG_FILES="/usr/local/etc/xml/catalog"
+
+eval $( gdircolors -b ~/.LS_COLORS )
+
+alias apachectl='sudo apachectl'
+alias vi='vim'
+alias top='htop'
+#Prompt and prompt colors
+# 30m - Black
+# 31m - Red
+# 32m - Green
+# 33m - Yellow
+# 34m - Blue
+# 35m - Purple
+# 36m - Cyan
+# 37m - White
+# 0 - Normal
+# 1 - Bold
+function prompt {
+  local BLACK="\[\033[0;30m\]"
+  local BLACKBOLD="\[\033[1;30m\]"
+  local RED="\[\033[0;31m\]"
+  local REDBOLD="\[\033[1;31m\]"
+  local GREEN="\[\033[0;32m\]"
+  local GREENBOLD="\[\033[1;32m\]"
+  local YELLOW="\[\033[0;33m\]"
+  local YELLOWBOLD="\[\033[1;33m\]"
+  local BLUE="\[\033[0;34m\]"
+  local BLUEBOLD="\[\033[1;34m\]"
+  local PURPLE="\[\033[0;35m\]"
+  local PURPLEBOLD="\[\033[1;35m\]"
+  local CYAN="\[\033[0;36m\]"
+  local CYANBOLD="\[\033[1;36m\]"
+  local WHITE="\[\033[0;37m\]"
+  local WHITEBOLD="\[\033[1;37m\]"
+  local DEEPBLUE="\[\033[38;05;27m\]"
+  local WARMBLUE="\[\033[38;05;69m\]"
+  local BLOOD="\[\033[38;05;196m\]"
+  local NICEPROMPT="\n$WHITEBOLD[\t]$PURPLEBOLD \u@\h\[\033[00m\]:$WARMBLUE\w\[\033[00m\] \\$ "
+
+if [ -d .svn ]; then
+	export PS1=$CYANBOLD\(\(\(~~subversion~~\)\)\)$NICEPROMPT
+elif [ -d .git ]; then
+	export PS1=$GREENBOLD\(\(\(~~git~~\)\)\)$NICEPROMPT
+else
+	export PS1=$NICEPROMPT
+fi
+}
+prompt
+
+function cd {
+	builtin cd "$@" && prompt;
+}
+
+alias ls="gls --color=always"
+alias vm="$HOME/scripts/vboxmanage.sh"
+alias work.sh="sudo work.sh"
+alias telnet="telnet -K"
+
+# VirtualEnv
+
+export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python
+export VIRTUALENVWRAPPER_VIRTUALENV=/usr/local/bin/virtualenv
+source /usr/local/bin/virtualenvwrapper.sh
+
+# Perlbrew
+
+export PERLBREW_ROOT=$HOME/.perl5/perlbrew
+source $PERLBREW_ROOT/etc/bashrc
+
+# RVM
+
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+export HOMEBREW_GITHUB_API_TOKEN=dba5ef7ff1ccdf19552425ef0d6a35210b077aa0
+
+# go stuff
+export GOPATH=$HOME/devel/go
+export PATH=$PATH:$GOPATH/bin
