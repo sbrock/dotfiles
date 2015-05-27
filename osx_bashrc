@@ -10,8 +10,8 @@ source $HOME/.bashincludes/john_the_cracker
 
 eval $( gdircolors -b /Users/cpk/.LS_COLORS )
 
-#Prompt and prompt colors
-# 30m - Black 31m - Red 32m - Green 33m - Yellow 34m - Blue 35m - Purple 36m - Cyan 37m - White 0 - Normal 1 - Bold
+# I definitely swiped this style of pretty prompting from some blogpost.
+# if you recognize whose, please let me know so I can give them credit.
 function prompt {
   local BLACK="\[\033[0;30m\]"
   local BLACKBOLD="\[\033[1;30m\]"
