@@ -1,8 +1,4 @@
-export GOPATH=$HOME/devel/go
-export CVS_RSH=/usr/bin/ssh
 export PATH=/usr/local/sbin:/usr/local/bin:/bin:/usr/sbin:/sbin:/Users/cpk/bin:/usr/bin:/Users/cpk/scripts:/Users/cpk/devel/php/pear/bin:/usr/local/mysql/bin:/Users/cpk/games/mame/mame0152-64bit:$HOME/Library/Python/2.7/bin:$GOPATH/bin:$PATH
-export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/opt/X11/lib/pkgconfig
-export XML_CATALOG_FILES="/usr/local/etc/xml/catalog"
 
 eval $( gdircolors -b ~/.LS_COLORS )
 
@@ -61,7 +57,7 @@ alias vm="$HOME/scripts/vboxmanage.sh"
 alias work.sh="sudo work.sh"
 alias telnet="telnet -K"
 
-# VirtualEnv
+# Python VirtualEnv
 
 export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python
 export VIRTUALENVWRAPPER_VIRTUALENV=/usr/local/bin/virtualenv
