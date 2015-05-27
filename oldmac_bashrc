@@ -38,12 +38,12 @@ function prompt {
   local BLOOD="\[\033[38;05;196m\]"
   local NICEPROMPT="\n$WHITEBOLD[\t]$PURPLEBOLD \u@\h\[\033[00m\]:$WARMBLUE\w\[\033[00m\] \\$ "
 
-if [ -d .svn ]; then
-	export PS1=$CYANBOLD\(\(\(~~subversion~~\)\)\)$NICEPROMPT
-elif [ -d .git ]; then
-	export PS1=$GREENBOLD\(\(\(~~git~~\)\)\)$NICEPROMPT
+if $( svn info > /dev/null 2>&1 ); [[ $? == 0 ]]; then
+        export PS1=$CYANBOLD\(\(\(~~subversion~~\)\)\)$NICEPROMPT
+elif $( git rev-parse > /dev/null 2>&1 ); [[ $? == 0 ]]; then
+        export PS1=$GREENBOLD\(\(\(~~git~~\)\)\)$NICEPROMPT
 else
-	export PS1=$NICEPROMPT
+        export PS1=$NICEPROMPT
 fi
 }
 prompt
