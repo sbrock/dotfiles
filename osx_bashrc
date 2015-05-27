@@ -44,6 +44,10 @@ fi
 }
 prompt
 
+function cd() {
+	builtin cd "$@" && prompt;
+}
+
 ##### FUNctions (hehehe)
 
 function vmstart() { 
@@ -65,16 +69,10 @@ function vmsave() {
 	VBoxManage controlvm $1 savestate
 }
 
-##### to see if we're in a repo dir or not
-function cd {
-	builtin cd "$@" && prompt;
-}
-
 ##### aliases
 
 alias ls='gls --color=always'
 alias vi='vim'
-alias top='htop'
 
 ##### python stuff
 export WORKON_HOME=$HOME/.virtualenvs
