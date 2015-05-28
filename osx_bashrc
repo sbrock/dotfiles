@@ -1,17 +1,17 @@
 export PATH=/usr/local/sbin:/usr/local/bin:/bin:/usr/sbin:/sbin:/Users/cpk/bin:/usr/bin:/Users/cpk/scripts:/Users/cpk/.local/bin:$CASS_HOME/bin:$PATH 
 export LC_ALL=en_US.UTF-8 export LANG=en_US.UTF-8
+export BASH_INCLUDES=$HOME/.bashincludes
 
-#### bash includes ####
-source $HOME/.bashincludes/homebrew_api_token
-source $HOME/.bashincludes/ansible_library
-source $HOME/.bashincludes/postgres_user
-source $HOME/.bashincludes/cassandra
-source $HOME/.bashincludes/john_the_cracker
+#### bash includes for potentially insecure info ####
+for include in $( ls $BASH_INCLUDES );
+do
+	source $BASH_INCLUDES/$include;
+done
 
 eval $( gdircolors -b /Users/cpk/.LS_COLORS )
 
-#Prompt and prompt colors
-# 30m - Black 31m - Red 32m - Green 33m - Yellow 34m - Blue 35m - Purple 36m - Cyan 37m - White 0 - Normal 1 - Bold
+# I definitely swiped this for somewhere once upon time.
+# If anyone know from where, I'd like to give credit.
 function prompt {
   local BLACK="\[\033[0;30m\]"
   local BLACKBOLD="\[\033[1;30m\]"
@@ -75,21 +75,3 @@ function vmsave() {
 
 alias ls='gls --color=always'
 alias vi='vim'
-
-##### python stuff
-export WORKON_HOME=$HOME/.virtualenvs
-export PROJECT_HOME=$HOME/devel/python
-source /usr/local/bin/virtualenvwrapper.sh
-
-##### perlbrew stuff
-source ~/.perl5/perlbrew/etc/bashrc
-
-##### rvm stuff
-export PATH="$PATH:$HOME/.rvm/scripts/bin" # Add RVM to PATH for scripting
-
-##### deis stuff
-export DEISCTL_TUNNEL=64.90.160.26
-
-##### go stuff
-export GOPATH=/Users/cpk/devel/go
-export PATH="$PATH:$GOPATH/bin"
