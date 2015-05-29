@@ -1,4 +1,4 @@
-export PATH=/usr/local/sbin:/usr/local/bin:/bin:/usr/sbin:/sbin:/Users/cpk/bin:/usr/bin:/Users/cpk/scripts:/Users/cpk/.local/bin:$CASS_HOME/bin:$PATH 
+export PATH=$PATH:/usr/local/sbin:/usr/local/bin:/bin:/usr/sbin:/sbin:$HOME/bin:/usr/bin:$HOME/scripts:$HOME/.local/bin:$CASS_HOME/bin 
 export LC_ALL=en_US.UTF-8 export LANG=en_US.UTF-8
 export BASH_INCLUDES=$HOME/.bashincludes
 
