@@ -1,19 +1,13 @@
-export PATH=$PATH:/usr/local/sbin:/usr/local/bin:/bin:/usr/sbin:/sbin:$HOME/bin:/usr/bin:$HOME/scripts:$HOME/.local/bin:$CASS_HOME/bin 
-#export LC_ALL="en_US.UTF-8"
-#export LANG="en_US.UTF-8"
+export BASH_INCLUDES=$HOME/.bashincludes/*
 
-eval $( dircolors -b $HOME/src/LS_COLORS/LS_COLORS )
+for include in $BASH_INCLUDES; do
+	        . $include;
+	done
 
-
-### start mpd ###
-if [ ! -s $HOME/.config/mpd/pid ]; then
-	mpd > /dev/null 2>&1;
-	if [ $? -ne 0 ]; then
-		echo "MPD didn't start";
-	else
-		echo "Started MPD"
-	fi
-fi
+export EDITOR=vim
+export PATH=/usr/local/sbin:/usr/local/bin:/bin:/usr/sbin:/sbin:$HOME/bin:/usr/bin:$HOME/scripts:$HOME/scripts/tmux-sessions:$HOME/.local/bin:$HOME/.local/sbin:$HOME/Library/Python/2.7/bin:$ECLIPSE_HOME:$GOPATH/bin
+export LC_ALL=en_US.UTF-8 export LANG=en_US.UTF-8
+eval $( gdircolors -b /Users/cpk/.LS_COLORS )
 
 # I definitely swiped this for somewhere once upon time.
 # If anyone know from where, I'd like to give credit.
@@ -37,15 +31,8 @@ function prompt {
   local DEEPBLUE="\[\033[38;05;27m\]"
   local WARMBLUE="\[\033[38;05;69m\]"
   local BLOOD="\[\033[38;05;196m\]"
+  local NICEPROMPT="\n$WHITEBOLD[\t]$PURPLEBOLD \u@\h\[\033[00m\]:$WARMBLUE\w\[\033[00m\] \\$ "
 
-if [ $(uname) == "Linux" ]; then
-	local NICEPROMPT="\n$WHITEBOLD[\t]$WARMBLUE \u@\h\[\033[00m\]:$WARMBLUE\w\[\033[00m\] \\$ ";
-elif [ $(uname) == "FreeBSD" ]; then
-	local NICEPROMPT="\n$WHITEBOLD[\t]$BLOOD \u@\h\[\033[00m\]:$WARMBLUE\w\[\033[00m\] \\$ ";
-else
-	local NICEPROMPT="\n$WHITEBOLD[\t]$WHITEBOLD \u@\h\[\033[00m\]:$WARMBLUE\w\[\033[00m\] \\$ ";
-fi
-	  
 if $( svn info > /dev/null 2>&1 ); [[ $? == 0 ]]; then
         export PS1=$CYANBOLD\(\(\(~~subversion~~\)\)\)$NICEPROMPT
 elif $( git rev-parse > /dev/null 2>&1 ); [[ $? == 0 ]]; then
@@ -60,6 +47,16 @@ prompt
 
 function cd() {
 	builtin cd "$@" && prompt;
+}
+
+##### VirtualBox wrappers
+
+function vmnat() {
+	VBoxManage controlvm $1 natpf1 $2,tcp,,$3,,$4
+}
+
+function vmnatremove() {
+	VBoxManage controlvm $1 natpf1 delete foremanweb
 }
 
 function vmstart() { 
@@ -81,23 +78,50 @@ function vmsave() {
 	VBoxManage controlvm $1 savestate
 }
 
-function doom() {
-	chocolate-doom ;
+function vmpause() {
+	VBoxManage controlvm $1 pause
 }
+
+function vmresume() {
+	VBoxManage controlvm $1 resume
+}
+
+function xvmstart() {
+if [ $# -ne 1 ]; then
+	printf "No VM listed. Please choose a VM from the following list:\n"
+	xvmlist;
+	exit 1;
+else
+	tmux has-session -t "xhyve" 2>&1
+	if [ $? -eq 0 ]; then
+		echo "we in here"
+		tmux attach-session -d -s "xhyve"
+	else
+		tmux new-session -d -c $HOME -n $1 -s "xhyve" $XHYVE_HOME/$1/start.sh
+		tmux switch-client -t "xhyve"
+	fi
+fi
+}
+function xvmlist() {
+	ls $XHYVE_HOME
+}
+
+function ts() {
+if [ $# -ne 1 ]; then
+	echo $#
+	printf "No session specified.\nChoose a session from the list using 'ts <session-name>'\n\n"
+	tl
+else
+	tmux attach-session -t $1
+fi
+}
+function tl() {
+	tmux list-sessions
+}
+
 
 ##### aliases
 
-alias ls='ls --color=always'
+alias ls='gls --color=always'
 alias vi='vim'
 alias tmux='tmux -2'
-
-http_proxy="http://localhost:8118"
-
-
-#### python ####
-. $HOME/.local/bin/virtualenvwrapper.sh
-
-#### perl ####
-export PERLBREW_ROOT=$HOME/.perl5/perlbrew
-. $HOME/.perl5/perlbrew/etc/bashrc
-
