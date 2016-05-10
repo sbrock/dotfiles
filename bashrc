@@ -1,13 +1,11 @@
-export BASH_INCLUDES=$HOME/.bashincludes/*
-
-for include in $BASH_INCLUDES; do
-	        . $include;
-	done
-
-export EDITOR=vim
 export PATH=/usr/local/sbin:/usr/local/bin:/bin:/usr/sbin:/sbin:$HOME/bin:/usr/bin:$HOME/scripts:$HOME/scripts/tmux-sessions:$HOME/.local/bin:$HOME/.local/sbin:$HOME/Library/Python/2.7/bin:$ECLIPSE_HOME:$GOPATH/bin
 export LC_ALL=en_US.UTF-8 export LANG=en_US.UTF-8
-eval $( gdircolors -b /Users/cpk/.LS_COLORS )
+
+if [[ $(uname) == "Darwin" ]]; then
+	eval $( gdircolors -b /Users/cpk/.LS_COLORS ) || eval $( dircolors -b /Users/cpk/.LS_COLORS )
+fi
+
+export EDITOR=vim
 
 # I definitely swiped this for somewhere once upon time.
 # If anyone know from where, I'd like to give credit.
@@ -31,7 +29,16 @@ function prompt {
   local DEEPBLUE="\[\033[38;05;27m\]"
   local WARMBLUE="\[\033[38;05;69m\]"
   local BLOOD="\[\033[38;05;196m\]"
-  local NICEPROMPT="\n$WHITEBOLD[\t]$PURPLEBOLD \u@\h\[\033[00m\]:$WARMBLUE\w\[\033[00m\] \\$ "
+
+  if [[ $(uname) == "Darwin" ]]; then
+          local NICEPROMPT="\n$WHITEBOLD[\t]$PURPLEBOLD \u@\h\[\033[00m\]:$WARMBLUE\w\[\033[00m\] \\$ "
+  elif [[ $(uname) == "FreeBSD" ]]; then
+          local NICEPROMPT="\n$WHITEBOLD[\t]$BLOOD \u@\h\[\033[00m\]:$WARMBLUE\w\[\033[00m\] \\$ "
+  elif [[ $(uname) == "Linux" ]]; then
+          local NICEPROMPT="\n$WHITEBOLD[\t]$WARMBLUE \u@\h\[\033[00m\]:$WARMBLUE\w\[\033[00m\] \\$ "
+  else
+          local NICEPROMPT="\n$WHITEBOLD[\t]$GREENBOLD \u@\h\[\033[00m\]:$WARMBLUE\w\[\033[00m\] \\$ "
+  fi
 
 if $( svn info > /dev/null 2>&1 ); [[ $? == 0 ]]; then
         export PS1=$CYANBOLD\(\(\(~~subversion~~\)\)\)$NICEPROMPT
@@ -46,77 +53,81 @@ fi
 prompt
 
 function cd() {
-	builtin cd "$@" && prompt;
+        builtin cd "$@" && prompt;
 }
 
 ##### VirtualBox wrappers
 
 function vmnat() {
-	VBoxManage controlvm $1 natpf1 $2,tcp,,$3,,$4
+        if [ $# -lt 4 ]; then
+                printf "Usage: vmnat <vmname | uuid> <rule name> <host port> <guest port>\n"
+        else
+                VBoxManage modifyvm $1 --natpf1 $2,tcp,,$3,,$4
+        fi
 }
 
 function vmnatremove() {
-	VBoxManage controlvm $1 natpf1 delete foremanweb
+        VBoxManage modifyvm $1 natpf1 delete foremanweb
 }
 
-function vmstart() { 
-	if [[ "$1" = "windows_7" ]]; then
-		VBoxManage startvm $1 --type gui
-	else
-		VBoxManage startvm $1 --type headless
-	fi
+function vmstart() {
+        if [[ "$1" = "windows_7" ]]; then
+                VBoxManage startvm $1 --type gui
+        else
+                VBoxManage startvm $1 --type headless
+        fi
 }
 
 function vmrunning() {
         VBoxManage list runningvms
 }
 function vmlist() {
-	VBoxManage list vms
+        VBoxManage list vms
 }
 
 function vmsave() {
-	VBoxManage controlvm $1 savestate
+        VBoxManage controlvm $1 savestate
 }
 
 function vmpause() {
-	VBoxManage controlvm $1 pause
+        VBoxManage controlvm $1 pause
 }
 
 function vmresume() {
-	VBoxManage controlvm $1 resume
+        VBoxManage controlvm $1 resume
 }
 
 function xvmstart() {
 if [ $# -ne 1 ]; then
-	printf "No VM listed. Please choose a VM from the following list:\n"
-	xvmlist;
-	exit 1;
+        printf "No VM listed. Please choose a VM from the following list:\n"
+        xvmlist;
+        exit 1;
 else
-	tmux has-session -t "xhyve" 2>&1
-	if [ $? -eq 0 ]; then
-		echo "we in here"
-		tmux attach-session -d -s "xhyve"
-	else
-		tmux new-session -d -c $HOME -n $1 -s "xhyve" $XHYVE_HOME/$1/start.sh
-		tmux switch-client -t "xhyve"
-	fi
+        tmux has-session -t "xhyve" 2>&1
+        if [ $? -eq 0 ]; then
+                echo "we in here"
+                tmux attach-session -d -s "xhyve"
+        else
+                tmux new-session -d -c $HOME -n $1 -s "xhyve" $XHYVE_HOME/$1/start.sh
+                tmux switch-client -t "xhyve"
+        fi
 fi
 }
 function xvmlist() {
-	ls $XHYVE_HOME
+        ls $XHYVE_HOME
 }
 
 function ts() {
 if [ $# -ne 1 ]; then
-	echo $#
-	printf "No session specified.\nChoose a session from the list using 'ts <session-name>'\n\n"
-	tl
+        echo $#
+        printf "No session specified.\nChoose a session from the list using 'ts <session-name>'\n\n"
+        tl
 else
-	tmux attach-session -t $1
+        tmux attach-session -t $1
 fi
 }
 function tl() {
-	tmux list-sessions
+        tmux list-sessions
 }
 
 
@@ -125,3 +136,12 @@ function tl() {
 alias ls='gls --color=always'
 alias vi='vim'
 alias tmux='tmux -2'
+
+#### Modular bash includes
+
+export BASH_INCLUDES=$HOME/.bashrc.d/*.inc
+for include in $BASH_INCLUDES; do
+        if [ -e $include ]; then
+                . $include;
+        fi
+done
